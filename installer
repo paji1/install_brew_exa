@@ -1,0 +1,45 @@
+#!/bin/bash
+
+GREEN='\033[1;32m'
+NC='\033[0m'
+
+ls ~/goinfre > /dev/null 2>&1
+if [ $? -ne 0 ]
+then
+	ln -s /goinfre/$USER $HOME/goinfre > /dev/null 2>&1
+fi
+
+echo $PATH | grep "homebrew" > /dev/null
+if [ $? -ne 0 ]
+then
+echo "PATH=$HOME/goinfre/homebrew/bin:$PATH" >> ~/.zshrc
+fi
+
+ls ~/goinfre/homebrew &> /dev/null
+if [ $? -ne 0 ]
+then
+	printf "$GREEN instaling Brew ... $NC "
+	mkdir ~/goinfre/homebrew > /dev/null 2>&1
+	curl --silent -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ~/goinfre/homebrew > /dev/null 2>&1
+	if [ $? -ne 0 ]
+	then
+		printf " ----> X"
+	else
+		printf "$GREEN ----> √ $NC\n"
+	fi		
+fi
+export PATH="$HOME/goinfre/homebrew/bin:$PATH"
+
+ls ~/goinfre/homebrew/bin/exa &> /dev/null
+if [ $? -ne 0 ]
+then
+	printf "$GREEN instaling exa ... $NC "
+	cp -rf $HOME/Desktop/tools/exa $HOME/goinfre/homebrew/bin
+	if [ $? -ne 0 ]
+	then
+		printf " ----> X"
+	else
+		printf "$GREEN ----> √ $NC\n"
+	fi
+fi
+
